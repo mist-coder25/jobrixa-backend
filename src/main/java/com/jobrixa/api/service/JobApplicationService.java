@@ -25,6 +25,7 @@ public class JobApplicationService {
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
     private final com.jobrixa.api.repository.ApplicationEventRepository eventRepository;
+    private final PlanLimitService planLimitService;
 
     private User getUser(UUID userId) {
         return userRepository.findById(userId)
@@ -39,6 +40,7 @@ public class JobApplicationService {
     @Transactional
     public JobApplicationResponse createApplication(JobApplicationRequest request) {
         User user = getUser(request.getUserId());
+        planLimitService.checkApplicationLimit(user); // enforce FREE plan cap
         Company company = getOrCreateCompany(request.getCompanyName());
         
         JobApplication app = JobApplication.builder()

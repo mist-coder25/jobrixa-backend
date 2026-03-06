@@ -26,6 +26,10 @@ spring:
     enabled: false
     baseline-on-migrate: true
 
+razorpay:
+  key-id: ${RAZORPAY_KEY_ID:}
+  key-secret: ${RAZORPAY_KEY_SECRET:}
+
 ---
 spring:
   config:

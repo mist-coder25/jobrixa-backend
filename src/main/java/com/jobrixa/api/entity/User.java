@@ -47,6 +47,11 @@ public class User implements UserDetails {
     @Column(length = 500)
     private String linkedinUrl;
 
+    @Column(nullable = false, length = 20)
+    @Builder.Default
+    private String plan = "FREE"; // FREE, PRO, CAMPUS
+
+    private LocalDateTime planExpiresAt;
     @Builder.Default
     private Boolean isEmailVerified = false;
 
