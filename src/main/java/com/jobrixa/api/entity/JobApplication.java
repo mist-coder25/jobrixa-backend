@@ -84,6 +84,9 @@ public class JobApplication {
     @Column(columnDefinition = "TEXT")
     private String tags; // comma-separated: "DSA,Java,System Design"
 
+    @Column(columnDefinition = "TEXT")
+    private String notes; // free-text notes and auto-detection log
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;

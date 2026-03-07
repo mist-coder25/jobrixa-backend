@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Fetches a job listing URL and extracts structured data using jsoup.
