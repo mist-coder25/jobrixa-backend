@@ -61,6 +61,12 @@ public class User implements UserDetails {
     @Builder.Default
     private Boolean gmailConnected = false;
 
+    @Column(name = "gmail_refresh_token", length = 500)
+    private String gmailRefreshToken;
+
+    @Column(name = "gmail_last_scanned")
+    private LocalDateTime gmailLastScanned;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
