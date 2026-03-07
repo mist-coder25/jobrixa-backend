@@ -39,7 +39,7 @@ public class GmailScanService {
 
     private final UserRepository userRepository;
     private final JobApplicationRepository applicationRepository;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     // ── Email pattern rules ────────────────────────────────────────────────────
 
