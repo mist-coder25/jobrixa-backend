@@ -36,10 +36,13 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:postgresql://db.lsxcotpdhxkpmkjebxnx.supabase.co:5432/postgres
-    username: postgres
-    password: ${DB_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 5
   jpa:
     hibernate:
       ddl-auto: update
@@ -49,6 +52,7 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+    open-in-view: false
   flyway:
     enabled: false
 
