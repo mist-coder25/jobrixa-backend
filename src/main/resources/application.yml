@@ -36,13 +36,15 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:postgresql://db.lsxcotpdhxkpmkjebxnx.supabase.co:5432/postgres?sslmode=require
-    username: postgres
-    password: ${DB_PASSWORD}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 30000
-      maximum-pool-size: 5
+      initialization-fail-timeout: 60000
+      ssl: true
+      ssl-mode: require
   jpa:
     hibernate:
       ddl-auto: update
