@@ -17,7 +17,7 @@ public class CorsConfig {
             "http://localhost:5173",
             "https://jobrixa.vercel.app",
             "https://jobrixa-frontend.vercel.app",
-            "https://jobrixa-cloudrun-url.run.app" // replace after deploy
+            "https://jobrixa-api.onrender.com" // replace after deploy
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
