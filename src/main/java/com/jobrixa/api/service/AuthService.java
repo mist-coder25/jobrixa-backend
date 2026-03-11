@@ -22,10 +22,15 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    private String sanitize(String input) {
+        if (input == null) return null;
+        return input.replaceAll("<[^>]*>", "").trim();
+    }
+
     public AuthResponse register(RegisterRequest request) {
         var user = User.builder()
-                .name(request.getFullName())
-                .email(request.getEmail())
+                .name(sanitize(request.getFullName()))
+                .email(sanitize(request.getEmail()))
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .build();
         repository.save(user);

@@ -37,27 +37,32 @@ public class JobApplicationService {
             .orElseGet(() -> companyRepository.save(Company.builder().name(name).build()));
     }
 
+    private String sanitize(String input) {
+        if (input == null) return null;
+        return input.replaceAll("<[^>]*>", "").trim();
+    }
+
     @Transactional
     public JobApplicationResponse createApplication(JobApplicationRequest request) {
         User user = getUser(request.getUserId());
         planLimitService.checkApplicationLimit(user); // enforce FREE plan cap
-        Company company = getOrCreateCompany(request.getCompanyName());
+        Company company = getOrCreateCompany(sanitize(request.getCompanyName()));
         
         JobApplication app = JobApplication.builder()
             .user(user)
             .company(company)
             .companyName(company.getName())
-            .jobTitle(request.getJobTitle())
-            .jobUrl(request.getJobUrl())
-            .location(request.getLocation())
+            .jobTitle(sanitize(request.getJobTitle()))
+            .jobUrl(sanitize(request.getJobUrl()))
+            .location(sanitize(request.getLocation()))
             .isRemote(request.getIsRemote() != null ? request.getIsRemote() : false)
-            .status(request.getStatus() != null ? request.getStatus() : "SAVED")
-            .source(request.getSource() != null ? request.getSource() : "MANUAL")
-            .priority(request.getPriority() != null ? request.getPriority() : "MEDIUM")
-            .jobDescription(request.getJobDescription())
+            .status(request.getStatus() != null ? sanitize(request.getStatus()) : "SAVED")
+            .source(request.getSource() != null ? sanitize(request.getSource()) : "MANUAL")
+            .priority(request.getPriority() != null ? sanitize(request.getPriority()) : "MEDIUM")
+            .jobDescription(sanitize(request.getJobDescription()))
             .salaryMin(request.getSalaryMin())
             .salaryMax(request.getSalaryMax())
-            .tags(request.getTags() != null && !request.getTags().isEmpty() ? String.join(",", request.getTags()) : null)
+            .tags(request.getTags() != null && !request.getTags().isEmpty() ? sanitize(String.join(",", request.getTags())) : null)
             .appliedAt(request.getAppliedAt() != null ? request.getAppliedAt() : ("APPLIED".equals(request.getStatus()) ? LocalDate.now() : null))
             .build();
             
@@ -89,14 +94,14 @@ public class JobApplicationService {
             throw new RuntimeException("Unauthorized");
         }
             
-        app.setJobTitle(request.getJobTitle());
-        app.setJobUrl(request.getJobUrl());
-        app.setLocation(request.getLocation());
+        app.setJobTitle(sanitize(request.getJobTitle()));
+        app.setJobUrl(sanitize(request.getJobUrl()));
+        app.setLocation(sanitize(request.getLocation()));
         app.setIsRemote(request.getIsRemote() != null ? request.getIsRemote() : false);
-        app.setJobDescription(request.getJobDescription());
+        app.setJobDescription(sanitize(request.getJobDescription()));
         app.setSalaryMin(request.getSalaryMin());
         app.setSalaryMax(request.getSalaryMax());
-        app.setTags(request.getTags() != null && !request.getTags().isEmpty() ? String.join(",", request.getTags()) : null);
+        app.setTags(request.getTags() != null && !request.getTags().isEmpty() ? sanitize(String.join(",", request.getTags())) : null);
         
         if (!app.getStatus().equals(request.getStatus())) {
             String oldStatus = app.getStatus();
@@ -117,7 +122,7 @@ public class JobApplicationService {
         }
         
         if (!app.getCompany().getName().equalsIgnoreCase(request.getCompanyName())) {
-            Company newCompany = getOrCreateCompany(request.getCompanyName());
+            Company newCompany = getOrCreateCompany(sanitize(request.getCompanyName()));
             app.setCompany(newCompany);
             app.setCompanyName(newCompany.getName());
         }
