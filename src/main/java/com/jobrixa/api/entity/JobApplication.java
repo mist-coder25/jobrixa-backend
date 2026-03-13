@@ -49,6 +49,14 @@ public class JobApplication {
 
     private LocalDate appliedAt;
     
+    private LocalDate deadline;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean missed = false;
+
+    private LocalDateTime missedAt;
+    
     private LocalDate nextActionDate;
 
     private Integer salaryMin;

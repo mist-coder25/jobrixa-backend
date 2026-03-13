@@ -26,5 +26,6 @@ public class JobApplicationRequest {
     private Integer salaryMin;
     private Integer salaryMax;
     private LocalDate appliedAt;
+    private LocalDate deadline;
     private java.util.List<String> tags;
 }

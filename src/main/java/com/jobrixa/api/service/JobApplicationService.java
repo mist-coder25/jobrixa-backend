@@ -64,6 +64,7 @@ public class JobApplicationService {
             .salaryMax(request.getSalaryMax())
             .tags(request.getTags() != null && !request.getTags().isEmpty() ? sanitize(String.join(",", request.getTags())) : null)
             .appliedAt(request.getAppliedAt() != null ? request.getAppliedAt() : ("APPLIED".equals(request.getStatus()) ? LocalDate.now() : null))
+            .deadline(request.getDeadline())
             .build();
             
         app = applicationRepository.save(app);
@@ -119,6 +120,9 @@ public class JobApplicationService {
         }
         if (request.getAppliedAt() != null) {
             app.setAppliedAt(request.getAppliedAt());
+        }
+        if (request.getDeadline() != null) {
+            app.setDeadline(request.getDeadline());
         }
         
         if (!app.getCompany().getName().equalsIgnoreCase(request.getCompanyName())) {
@@ -206,6 +210,26 @@ public class JobApplicationService {
         return result;
     }
     
+    public java.util.Map<String, Object> getMissedAnalytics(UUID userId) {
+        long missedCount = applicationRepository.countByUserIdAndMissedTrue(userId);
+        long totalRelevant = applicationRepository.countByUserIdAndStatusIn(userId, java.util.Arrays.asList("OA", "INTERVIEW"));
+        
+        List<JobApplicationResponse> missedApps = applicationRepository.findByUserIdAndMissedTrue(userId)
+            .stream()
+            .map(this::mapToResponse)
+            .collect(Collectors.toList());
+            
+        double missedPercentage = totalRelevant == 0 ? 0 : Math.round(((double) missedCount / totalRelevant * 100) * 10.0) / 10.0;
+        
+        java.util.Map<String, Object> result = new java.util.HashMap<>();
+        result.put("missedCount", missedCount);
+        result.put("totalAssessments", totalRelevant);
+        result.put("missedPercentage", missedPercentage);
+        result.put("missedApplications", missedApps);
+        
+        return result;
+    }
+    
     public List<com.jobrixa.api.dto.ApplicationEventResponse> getEventsForApplication(UUID id, String username) {
         JobApplication app = applicationRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Application not found"));
@@ -240,6 +264,9 @@ public class JobApplicationService {
             .salaryMax(app.getSalaryMax())
             .tags(app.getTags() != null ? java.util.Arrays.asList(app.getTags().split(",")) : null)
             .appliedAt(app.getAppliedAt())
+            .deadline(app.getDeadline())
+            .missed(app.getMissed())
+            .missedAt(app.getMissedAt())
             .createdAt(app.getCreatedAt())
             .updatedAt(app.getUpdatedAt())
             .build();

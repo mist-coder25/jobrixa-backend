@@ -68,6 +68,13 @@ public class JobApplicationController {
         com.jobrixa.api.entity.User user = (com.jobrixa.api.entity.User) userDetails;
         return ResponseEntity.ok(applicationService.getAnalytics(user.getId()));
     }
+
+    @GetMapping("/missed")
+    public ResponseEntity<java.util.Map<String, Object>> getMissedApplications(
+            @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails) {
+        com.jobrixa.api.entity.User user = (com.jobrixa.api.entity.User) userDetails;
+        return ResponseEntity.ok(applicationService.getMissedAnalytics(user.getId()));
+    }
     
     @GetMapping("/{id}/events")
     public ResponseEntity<List<com.jobrixa.api.dto.ApplicationEventResponse>> getEvents(

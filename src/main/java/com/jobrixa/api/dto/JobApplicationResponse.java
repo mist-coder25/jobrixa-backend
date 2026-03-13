@@ -22,6 +22,9 @@ public class JobApplicationResponse {
     private Integer salaryMin;
     private Integer salaryMax;
     private LocalDate appliedAt;
+    private LocalDate deadline;
+    private Boolean missed;
+    private LocalDateTime missedAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private java.util.List<String> tags;
