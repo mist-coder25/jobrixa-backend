@@ -10,6 +10,7 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @org.springframework.scheduling.annotation.Async
     public void sendOtp(String to, String otp) {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(to);

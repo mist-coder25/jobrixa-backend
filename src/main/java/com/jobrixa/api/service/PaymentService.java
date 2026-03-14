@@ -57,19 +57,25 @@ public class PaymentService {
             return Map.of("orderId", mockOrderId, "amount", amount, "currency", "INR", "key", "rzp_test_mock");
         }
 
-        RazorpayClient client = new RazorpayClient(keyId, keySecret);
-        JSONObject orderRequest = new JSONObject();
-        orderRequest.put("amount", amount);
-        orderRequest.put("currency", "INR");
-        orderRequest.put("receipt", "jobrixa_" + user.getId() + "_" + plan);
-        orderRequest.put("payment_capture", 1);
+        try {
+            RazorpayClient client = new RazorpayClient(keyId, keySecret);
+            JSONObject orderRequest = new JSONObject();
+            orderRequest.put("amount", amount);
+            orderRequest.put("currency", "INR");
+            orderRequest.put("receipt", "jobrixa_" + user.getId() + "_" + plan);
+            orderRequest.put("payment_capture", 1);
 
-        Order order = client.orders.create(orderRequest);
-        String orderId = order.get("id");
+            Order order = client.orders.create(orderRequest);
+            String orderId = order.get("id");
 
-        persistPayment(user, orderId, plan, amount);
+            persistPayment(user, orderId, plan, amount);
 
-        return Map.of("orderId", orderId, "amount", amount, "currency", "INR", "key", keyId);
+            return Map.of("orderId", orderId, "amount", amount, "currency", "INR", "key", keyId);
+        } catch (RazorpayException e) {
+            System.err.println("Razorpay Order Creation Failed: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     private void persistPayment(User user, String orderId, String plan, int amount) {

@@ -26,6 +26,7 @@ public class PaymentController {
     public ResponseEntity<?> createOrder(
             @RequestBody Map<String, String> body,
             @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails) {
+        System.out.println("Payment Create Order Request: " + body);
         try {
             User user = (User) userDetails;
             String plan = body.getOrDefault("plan", "PRO").toUpperCase();

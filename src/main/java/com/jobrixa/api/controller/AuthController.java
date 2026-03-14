@@ -46,8 +46,13 @@ public class AuthController {
     @PostMapping("/forgot-password")
     public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody Map<String, String> body) {
         String email = body.get("email");
-        if (!userRepository.findByEmailIgnoreCase(email).isPresent()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Email not found"));
+        if (email == null || email.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email is required"));
+        }
+
+        if (userRepository.findByEmailIgnoreCase(email).isEmpty()) {
+            log.warn("Forgot password attempt for non-existent email: {}", email);
+            return ResponseEntity.status(404).body(Map.of("error", "Email not found"));
         }
         
         String otp = String.format("%06d", new Random().nextInt(999999));
@@ -55,10 +60,11 @@ public class AuthController {
         
         try {
             emailService.sendOtp(email, otp);
-            log.info("OTP sent to {}", email);
+            log.info("OTP generation triggered for {}", email);
         } catch (Exception e) {
-            log.error("Failed to send OTP", e);
-            return ResponseEntity.internalServerError().body(Map.of("error", "Failed to send email"));
+            log.error("Failed to trigger OTP email for {}", email, e);
+            // We still return 200 to not leak that sending failed, 
+            // but the user will proceed to the OTP screen where they can retry.
         }
         
         return ResponseEntity.ok(Map.of("message", "OTP sent to your email"));
