@@ -67,6 +67,7 @@ public class User implements UserDetails {
     @Column(name = "gmail_last_scanned")
     private LocalDateTime gmailLastScanned;
 
+    @Column(name = "total_applications_created", nullable = false, columnDefinition = "integer default 0")
     @Builder.Default
     private Integer totalApplicationsCreated = 0;
 

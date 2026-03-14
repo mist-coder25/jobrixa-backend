@@ -27,6 +27,19 @@ public class JobApplicationService {
     private final com.jobrixa.api.repository.ApplicationEventRepository eventRepository;
     private final PlanLimitService planLimitService;
 
+    @jakarta.annotation.PostConstruct
+    @Transactional
+    public void backfillCounts() {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            if (user.getTotalApplicationsCreated() == null || user.getTotalApplicationsCreated() == 0) {
+                long count = applicationRepository.countByUserId(user.getId());
+                user.setTotalApplicationsCreated((int) count);
+                userRepository.save(user);
+            }
+        }
+    }
+
     private User getUser(UUID userId) {
         return userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
@@ -69,8 +82,8 @@ public class JobApplicationService {
             
         app = applicationRepository.save(app);
 
-        // Increment total applications created counter
-        int current = user.getTotalApplicationsCreated() != null ? user.getTotalApplicationsCreated() : 0;
+        // Increment total applications created counter (One-way only)
+        int current = user.getTotalApplicationsCreated() == null ? 0 : user.getTotalApplicationsCreated();
         user.setTotalApplicationsCreated(current + 1);
         userRepository.save(user);
         
@@ -172,6 +185,8 @@ public class JobApplicationService {
         if (!app.getUser().getId().equals(userId)) {
             throw new RuntimeException("Unauthorized");
         }
+        // ONLY delete the application repository record.
+        // DO NOT decrement user.totalApplicationsCreated.
         applicationRepository.deleteById(id);
     }
     
@@ -213,7 +228,8 @@ public class JobApplicationService {
         result.put("offerRate", offerRate);
         
         User user = getUser(userId);
-        result.put("totalEverCreated", user.getTotalApplicationsCreated() != null ? user.getTotalApplicationsCreated() : 0);
+        int totalEver = user.getTotalApplicationsCreated() == null ? 0 : user.getTotalApplicationsCreated();
+        result.put("totalEverCreated", totalEver);
         
         return result;
     }
