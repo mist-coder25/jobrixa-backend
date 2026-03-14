@@ -26,18 +26,16 @@ spring:
     enabled: false
     baseline-on-migrate: true
   mail:
-    host: smtp.gmail.com
-    port: 465
+    host: smtp-relay.brevo.com
+    port: 587
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
           auth: true
-          ssl:
-            enable: true
           starttls:
-            enable: false
+            enable: true
 
 razorpay:
   key-id: ${RAZORPAY_KEY_ID:}
