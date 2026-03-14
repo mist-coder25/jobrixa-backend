@@ -27,18 +27,7 @@ public class JobApplicationService {
     private final com.jobrixa.api.repository.ApplicationEventRepository eventRepository;
     private final PlanLimitService planLimitService;
 
-    @jakarta.annotation.PostConstruct
-    @Transactional
-    public void backfillCounts() {
-        List<User> users = userRepository.findAll();
-        for (User user : users) {
-            if (user.getTotalApplicationsCreated() == null || user.getTotalApplicationsCreated() == 0) {
-                long count = applicationRepository.countByUserId(user.getId());
-                user.setTotalApplicationsCreated((int) count);
-                userRepository.save(user);
-            }
-        }
-    }
+
 
     private User getUser(UUID userId) {
         return userRepository.findById(userId)
