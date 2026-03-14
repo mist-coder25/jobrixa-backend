@@ -46,6 +46,10 @@ public class AuthController {
     @PostMapping("/forgot-password")
     public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody Map<String, String> body) {
         String email = body.get("email");
+        if (!userRepository.findByEmailIgnoreCase(email).isPresent()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email not found"));
+        }
+        
         String otp = String.format("%06d", new Random().nextInt(999999));
         otpStore.put(email, new OtpEntry(otp, LocalDateTime.now().plusMinutes(15)));
         
@@ -82,7 +86,7 @@ public class AuthController {
         if (email == null) {
             return ResponseEntity.badRequest().body(Map.of("error", "Invalid reset token"));
         }
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow();
         user.setPasswordHash(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         resetTokenStore.remove(token);
