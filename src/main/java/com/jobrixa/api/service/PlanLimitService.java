@@ -21,7 +21,7 @@ public class PlanLimitService {
         if (isPlanActive(user)) {
             return; // unlimited
         }
-        int count = user.getTotalApplicationsCreated();
+        int count = user.getTotalApplicationsCreated() != null ? user.getTotalApplicationsCreated() : 0;
         if (count >= FREE_APPLICATION_LIMIT) {
             throw new RuntimeException(
                 "Free plan limit reached (" + FREE_APPLICATION_LIMIT + " applications). " +

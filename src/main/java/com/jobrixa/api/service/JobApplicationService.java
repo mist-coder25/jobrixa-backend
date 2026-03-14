@@ -70,7 +70,8 @@ public class JobApplicationService {
         app = applicationRepository.save(app);
 
         // Increment total applications created counter
-        user.setTotalApplicationsCreated(user.getTotalApplicationsCreated() + 1);
+        int current = user.getTotalApplicationsCreated() != null ? user.getTotalApplicationsCreated() : 0;
+        user.setTotalApplicationsCreated(current + 1);
         userRepository.save(user);
         
         eventRepository.save(com.jobrixa.api.entity.ApplicationEvent.builder()
@@ -212,7 +213,7 @@ public class JobApplicationService {
         result.put("offerRate", offerRate);
         
         User user = getUser(userId);
-        result.put("totalEverCreated", user.getTotalApplicationsCreated());
+        result.put("totalEverCreated", user.getTotalApplicationsCreated() != null ? user.getTotalApplicationsCreated() : 0);
         
         return result;
     }
