@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import jakarta.annotation.PostConstruct;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -33,6 +34,15 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final UserRepository userRepository;
+
+    @PostConstruct
+    public void init() {
+        if (keyId != null && keyId.length() >= 8) {
+            System.out.println("Razorpay Key ID loaded: " + keyId.substring(0, 8) + "...");
+        } else {
+            System.err.println("Razorpay Key ID is NULL or too short!");
+        }
+    }
 
     public static final Map<String, Integer> PLAN_PRICES = Map.of(
         "PRO_MONTHLY", 14900,
@@ -72,8 +82,9 @@ public class PaymentService {
 
             return Map.of("orderId", orderId, "amount", amount, "currency", "INR", "key", keyId);
         } catch (RazorpayException e) {
-            System.err.println("Razorpay Order Creation Failed: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Razorpay Order Creation Failed!");
+            System.err.println("Error Message: " + e.getMessage());
+            System.err.println("Razorpay Trace: " + e.getStackTrace());
             throw e;
         }
     }
