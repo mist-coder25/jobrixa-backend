@@ -25,17 +25,7 @@ spring:
   flyway:
     enabled: false
     baseline-on-migrate: true
-  mail:
-    host: smtp-relay.brevo.com
-    port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+
 
 razorpay:
   key-id: ${RAZORPAY_KEY_ID:}

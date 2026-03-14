@@ -1,22 +1,32 @@
 package com.jobrixa.api.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import com.resend.Resend;
+import com.resend.services.emails.model.CreateEmailOptions;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class EmailService {
-    @Autowired
-    private JavaMailSender mailSender;
+    @Value("${RESEND_API_KEY:}")
+    private String resendApiKey;
 
-    @org.springframework.scheduling.annotation.Async
+    @Async
     public void sendOtp(String to, String otp) {
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(to);
-        msg.setSubject("Your Jobrixa OTP");
-        msg.setText("Your OTP is: " + otp + "\n\nValid for 10 minutes.\n\n- Jobrixa Team");
-        msg.setFrom("snehalthube29@gmail.com");
-        mailSender.send(msg);
+        try {
+            Resend resend = new Resend(resendApiKey);
+            CreateEmailOptions options = CreateEmailOptions.builder()
+                .from("Jobrixa <onboarding@resend.dev>")
+                .to(List.of(to))
+                .subject("Your Jobrixa OTP")
+                .html("<p>Your OTP is: <strong>" + otp + "</strong></p><p>Valid for 10 minutes.</p>")
+                .build();
+            resend.emails().send(options);
+            System.out.println("OTP sent via Resend to: " + to);
+        } catch (Exception e) {
+            System.err.println("Resend failed: " + e.getMessage());
+        }
     }
 }
