@@ -72,7 +72,7 @@ public class PaymentService {
             JSONObject orderRequest = new JSONObject();
             orderRequest.put("amount", amount);
             orderRequest.put("currency", "INR");
-            orderRequest.put("receipt", "jobrixa_" + user.getId() + "_" + plan);
+            orderRequest.put("receipt", "jbx_" + System.currentTimeMillis());
             orderRequest.put("payment_capture", 1);
 
             Order order = client.orders.create(orderRequest);
