@@ -28,7 +28,15 @@ public class PaymentController {
         try {
             User user = (User) userDetails;
             String plan = body.getOrDefault("plan", "PRO").toUpperCase();
-            Map<String, Object> result = paymentService.createOrder(plan, user);
+            Integer amount = null;
+            if (body.containsKey("amount")) {
+                try {
+                    amount = Integer.parseInt(body.get("amount"));
+                } catch (NumberFormatException e) {
+                    // Ignore or log
+                }
+            }
+            Map<String, Object> result = paymentService.createOrder(plan, amount, user);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));

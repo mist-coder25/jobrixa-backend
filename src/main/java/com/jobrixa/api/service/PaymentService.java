@@ -35,18 +35,19 @@ public class PaymentService {
     private final UserRepository userRepository;
 
     public static final Map<String, Integer> PLAN_PRICES = Map.of(
-        "PRO", 14900,     // ₹149 in paise
-        "CAMPUS", 49900   // ₹499 in paise
+        "PRO_MONTHLY", 14900,
+        "PRO_YEARLY", 99900,
+        "CAMPUS", 49900
     );
 
     /**
      * Creates a Razorpay order and persists a PENDING payment record.
      */
     @Transactional
-    public Map<String, Object> createOrder(String plan, User user) throws RazorpayException {
-        Integer amount = PLAN_PRICES.get(plan.toUpperCase());
+    public Map<String, Object> createOrder(String plan, Integer requestedAmount, User user) throws RazorpayException {
+        Integer amount = requestedAmount != null ? requestedAmount : PLAN_PRICES.get(plan.toUpperCase());
         if (amount == null) {
-            throw new IllegalArgumentException("Unknown plan: " + plan);
+            throw new IllegalArgumentException("Unknown plan or missing amount");
         }
 
         if (keyId == null || keySecret == null) {
@@ -106,10 +107,17 @@ public class PaymentService {
             paymentRepository.save(payment);
 
             // Upgrade user plan
-            user.setPlan(payment.getPlan());
-            LocalDateTime expiry = "CAMPUS".equals(payment.getPlan())
-                ? LocalDateTime.now().plusMonths(6)   // semester
-                : LocalDateTime.now().plusMonths(1);   // monthly
+            String plan = payment.getPlan();
+            user.setPlan("PRO_YEARLY".equals(plan) || "PRO_MONTHLY".equals(plan) ? "PRO" : plan);
+            
+            LocalDateTime expiry;
+            if ("PRO_YEARLY".equals(plan)) {
+                expiry = LocalDateTime.now().plusYears(1);
+            } else if ("CAMPUS".equals(plan)) {
+                expiry = LocalDateTime.now().plusMonths(6);
+            } else {
+                expiry = LocalDateTime.now().plusMonths(1);
+            }
             user.setPlanExpiresAt(expiry);
             userRepository.save(user);
 
