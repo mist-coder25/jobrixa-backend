@@ -63,6 +63,7 @@ public class UserController {
                 .targetCtcMin(user.getTargetCtcMin())
                 .targetCtcMax(user.getTargetCtcMax())
                 .avatarUrl(user.getAvatarUrl())
+                .plan(user.getPlan())
                 .build();
     }
 }

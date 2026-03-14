@@ -17,4 +17,5 @@ public class UserProfileResponse {
     private Integer targetCtcMin;
     private Integer targetCtcMax;
     private String avatarUrl;
+    private String plan;
 }
