@@ -19,7 +19,10 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserProfileResponse> getMe(
             @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails) {
-        User user = (User) userDetails;
+        // Fetch from DB by email instead of using the injected userDetails Principal
+        // this ensures we get the most recent plan status after a payment.
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return ResponseEntity.ok(mapToResponse(user));
     }
 

@@ -123,8 +123,8 @@ public class PaymentService {
             payment.setRazorpayPaymentId(paymentId);
             paymentRepository.save(payment);
 
-            // Re-fetch user to ensure it's attached to session
-            User currentUser = userRepository.findById(user.getId())
+            // Re-fetch user by email to be absolutely sure we have the latest DB state
+            User currentUser = userRepository.findByEmail(user.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
             // Upgrade user plan
@@ -140,7 +140,7 @@ public class PaymentService {
                 expiry = LocalDateTime.now().plusMonths(1);
             }
             currentUser.setPlanExpiresAt(expiry);
-            userRepository.save(currentUser);
+            userRepository.saveAndFlush(currentUser);
             System.out.println("User plan upgraded to: " + currentUser.getPlan() + " for " + currentUser.getEmail());
 
             return currentUser.getPlan();
