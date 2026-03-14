@@ -21,4 +21,6 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
     
     @Query("SELECT COUNT(a) FROM JobApplication a WHERE a.user.id = :userId AND a.status IN :statuses")
     long countByUserIdAndStatusIn(@Param("userId") UUID userId, @Param("statuses") List<String> statuses);
+
+    long countByUserId(UUID userId);
 }
