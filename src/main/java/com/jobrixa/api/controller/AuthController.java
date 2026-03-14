@@ -27,6 +27,7 @@ public class AuthController {
     private final AuthService authService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final com.jobrixa.api.service.EmailService emailService;
 
     private final ConcurrentHashMap<String, OtpEntry> otpStore = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> resetTokenStore = new ConcurrentHashMap<>();
@@ -47,8 +48,15 @@ public class AuthController {
         String email = body.get("email");
         String otp = String.format("%06d", new Random().nextInt(999999));
         otpStore.put(email, new OtpEntry(otp, LocalDateTime.now().plusMinutes(15)));
-        // TODO: Send email via JavaMailSender
-        log.info("OTP for {}: {}", email, otp); // Remove in production
+        
+        try {
+            emailService.sendOtp(email, otp);
+            log.info("OTP sent to {}", email);
+        } catch (Exception e) {
+            log.error("Failed to send OTP", e);
+            return ResponseEntity.internalServerError().body(Map.of("error", "Failed to send email"));
+        }
+        
         return ResponseEntity.ok(Map.of("message", "OTP sent to your email"));
     }
 
