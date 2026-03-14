@@ -1,7 +1,6 @@
 package com.jobrixa.api.service;
 
 import com.jobrixa.api.entity.User;
-import com.jobrixa.api.repository.JobApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +11,6 @@ import java.time.LocalDateTime;
 public class PlanLimitService {
 
     private static final int FREE_APPLICATION_LIMIT = 30;
-    private final JobApplicationRepository applicationRepository;
 
     /**
      * Returns true if the user is under the limit (can create a new application).
@@ -23,7 +21,7 @@ public class PlanLimitService {
         if (isPlanActive(user)) {
             return; // unlimited
         }
-        long count = applicationRepository.findByUserId(user.getId()).size();
+        int count = user.getTotalApplicationsCreated();
         if (count >= FREE_APPLICATION_LIMIT) {
             throw new RuntimeException(
                 "Free plan limit reached (" + FREE_APPLICATION_LIMIT + " applications). " +

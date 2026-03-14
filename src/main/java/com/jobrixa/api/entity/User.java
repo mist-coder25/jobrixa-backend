@@ -67,6 +67,9 @@ public class User implements UserDetails {
     @Column(name = "gmail_last_scanned")
     private LocalDateTime gmailLastScanned;
 
+    @Builder.Default
+    private Integer totalApplicationsCreated = 0;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
