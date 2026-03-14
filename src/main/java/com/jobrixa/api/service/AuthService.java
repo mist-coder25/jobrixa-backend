@@ -42,6 +42,7 @@ public class AuthService {
                         .id(user.getId())
                         .email(user.getEmail())
                         .fullName(user.getName())
+                        .plan(user.getPlan())
                         .build())
                 .build();
     }
@@ -63,6 +64,7 @@ public class AuthService {
                         .id(user.getId())
                         .email(user.getEmail())
                         .fullName(user.getName())
+                        .plan(user.getPlan())
                         .build())
                 .build();
     }

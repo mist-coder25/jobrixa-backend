@@ -55,9 +55,9 @@ public class PaymentController {
         String paymentId = body.get("razorpay_payment_id");
         String signature = body.get("razorpay_signature");
 
-        boolean success = paymentService.verifyPayment(orderId, paymentId, signature, user);
-        if (success) {
-            return ResponseEntity.ok(Map.of("success", true, "plan", user.getPlan()));
+        String updatedPlan = paymentService.verifyPayment(orderId, paymentId, signature, user);
+        if (updatedPlan != null) {
+            return ResponseEntity.ok(Map.of("success", true, "plan", updatedPlan));
         }
         return ResponseEntity.status(400).body(Map.of("success", false, "error", "Payment verification failed"));
     }

@@ -103,7 +103,7 @@ public class PaymentService {
      * Verifies Razorpay HMAC-SHA256 signature, then upgrades the user's plan.
      */
     @Transactional
-    public boolean verifyPayment(String orderId, String paymentId, String signature, User user) {
+    public String verifyPayment(String orderId, String paymentId, String signature, User user) {
         try {
             if (keySecret != null && !keySecret.isBlank()) {
                 String payload = orderId + "|" + paymentId;
@@ -111,7 +111,7 @@ public class PaymentService {
                 mac.init(new SecretKeySpec(keySecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
                 String generated = HexFormat.of().formatHex(mac.doFinal(payload.getBytes(StandardCharsets.UTF_8)));
                 if (!generated.equals(signature)) {
-                    return false;
+                    return null;
                 }
             }
 
@@ -143,9 +143,9 @@ public class PaymentService {
             userRepository.save(currentUser);
             System.out.println("User plan upgraded to: " + currentUser.getPlan() + " for " + currentUser.getEmail());
 
-            return true;
+            return currentUser.getPlan();
         } catch (Exception e) {
-            return false;
+            return null;
         }
     }
 
