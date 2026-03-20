@@ -35,13 +35,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
-        AuthResponse response = authService.register(request);
-        try {
-            emailService.sendWelcome(response.getUser().getEmail(), response.getUser().getFullName());
-        } catch (Exception e) {
-            log.error("Failed to send welcome email for {}", response.getUser().getEmail(), e);
-        }
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/login")

@@ -21,6 +21,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
 
     private String sanitize(String input) {
         if (input == null) return null;
@@ -34,6 +35,12 @@ public class AuthService {
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .build();
         repository.save(user);
+
+        try {
+            emailService.sendWelcomeEmail(user.getEmail(), user.getName());
+        } catch (Exception e) {
+            // Non-blocking
+        }
 
         var jwtToken = jwtService.generateToken(user);
         return AuthResponse.builder()

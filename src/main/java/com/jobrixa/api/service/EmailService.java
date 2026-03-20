@@ -31,23 +31,29 @@ public class EmailService {
     }
 
     @Async
-    public void sendWelcome(String to, String name) {
+    public void sendWelcomeEmail(String to, String name) {
         try {
             Resend resend = new Resend(resendApiKey);
             CreateEmailOptions request = CreateEmailOptions.builder()
                 .from("Jobrixa <onboarding@resend.dev>")
                 .to(List.of(to))
                 .subject("Welcome to Jobrixa! 🎯")
-                .html("<h2>Hey " + name + "!</h2>" +
-                      "<p>Welcome to Jobrixa — your job hunt is now organized.</p>" +
-                      "<p>Here's how to get started:</p>" +
-                      "<ol>" +
-                      "<li>Add your first job application to the Pipeline</li>" +
-                      "<li>Set deadlines so you never miss an OA</li>" +
-                      "<li>Check your Analytics to track your response rate</li>" +
-                      "</ol>" +
-                      "<p><a href='https://jobrixa-frontend.vercel.app/pipeline'>Go to your Pipeline →</a></p>" +
-                      "<p>— The Jobrixa Team</p>")
+                .html("""
+                    <div style="font-family:sans-serif;max-width:500px;margin:auto">
+                    <h2>Welcome to Jobrixa, %s! 🎯</h2>
+                    <p>Your job hunt is now organized. Here's how to get started:</p>
+                    <ol>
+                    <li>Add your first job application to the Pipeline</li>
+                    <li>Track every stage — OA, Interview, Offer</li>
+                    <li>Check your Analytics to see your response rate</li>
+                    </ol>
+                    <a href="https://jobrixa-frontend.vercel.app/pipeline" 
+                       style="background:#4F8EF7;color:white;padding:12px 24px;border-radius:6px;text-decoration:none">
+                       Go to my Pipeline →
+                    </a>
+                    <p style="color:#888;margin-top:24px">Free plan: 30 applications. Upgrade anytime at ₹149/month.</p>
+                    </div>
+                """.formatted(name))
                 .build();
             resend.emails().send(request);
         } catch (Exception e) {
