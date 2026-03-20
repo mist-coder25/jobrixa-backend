@@ -38,20 +38,18 @@ public class EmailService {
                 .from("Jobrixa <onboarding@resend.dev>")
                 .to(List.of(to))
                 .subject("Welcome to Jobrixa! 🎯")
-                .html("<h2>Hey " + name + ", welcome to Jobrixa!</h2>" +
-                      "<p>You're all set to start tracking your job applications like a pro.</p>" +
-                      "<p><strong>Here's how to get started:</strong></p>" +
+                .html("<h2>Hey " + name + "!</h2>" +
+                      "<p>Welcome to Jobrixa — your job hunt is now organized.</p>" +
+                      "<p>Here's how to get started:</p>" +
                       "<ol>" +
                       "<li>Add your first job application to the Pipeline</li>" +
-                      "<li>Check your Dashboard for real-time analytics</li>" +
-                      "<li>Use Discover to find trusted job listings</li>" +
+                      "<li>Set deadlines so you never miss an OA</li>" +
+                      "<li>Check your Analytics to track your response rate</li>" +
                       "</ol>" +
-                      "<p>Free plan includes 30 applications. Need more? <a href='https://jobrixa-frontend.vercel.app/pricing'>Upgrade to Pro</a> anytime.</p>" +
-                      "<p>Good luck with your job hunt! 🚀</p>" +
+                      "<p><a href='https://jobrixa-frontend.vercel.app/pipeline'>Go to your Pipeline →</a></p>" +
                       "<p>— The Jobrixa Team</p>")
                 .build();
             resend.emails().send(request);
-            System.out.println("Welcome email sent to: " + to);
         } catch (Exception e) {
             System.err.println("Welcome email failed: " + e.getMessage());
         }
