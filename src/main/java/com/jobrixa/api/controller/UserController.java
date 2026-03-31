@@ -4,6 +4,7 @@ import com.jobrixa.api.dto.UserProfileRequest;
 import com.jobrixa.api.dto.UserProfileResponse;
 import com.jobrixa.api.entity.User;
 import com.jobrixa.api.repository.UserRepository;
+import com.jobrixa.api.service.PlanLimitService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final PlanLimitService planLimitService;
 
     @GetMapping("/me")
     public ResponseEntity<UserProfileResponse> getMe(
@@ -67,6 +69,8 @@ public class UserController {
                 .targetCtcMax(user.getTargetCtcMax())
                 .avatarUrl(user.getAvatarUrl())
                 .plan(user.getPlan())
+                .isBetaTester(planLimitService.isBetaEligible(user))
+                .betaDaysLeft(planLimitService.getBetaDaysLeft(user))
                 .build();
     }
 }

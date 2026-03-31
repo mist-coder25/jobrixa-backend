@@ -18,4 +18,6 @@ public class UserProfileResponse {
     private Integer targetCtcMax;
     private String avatarUrl;
     private String plan;
+    private Boolean isBetaTester;
+    private Long betaDaysLeft;
 }
