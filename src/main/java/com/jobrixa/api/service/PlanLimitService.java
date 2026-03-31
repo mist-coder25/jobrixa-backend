@@ -18,17 +18,18 @@ public class PlanLimitService {
      * PRO / CAMPUS (and not expired): unlimited.
      */
     public void checkApplicationLimit(User user) {
-        if (isPlanActive(user)) {
-            return; // unlimited
-        }
-        int count = user.getTotalApplicationsCreated() != null ? user.getTotalApplicationsCreated() : 0;
         // TEMPORARILY DISABLED FOR BETA LAUNCH
+        // if (isPlanActive(user)) {
+        //     return; // unlimited
+        // }
+        // int count = user.getTotalApplicationsCreated() != null ? user.getTotalApplicationsCreated() : 0;
         // if (count >= FREE_APPLICATION_LIMIT) {
         //     throw new RuntimeException(
         //         "Free plan limit reached (" + FREE_APPLICATION_LIMIT + " applications). " +
         //         "Upgrade to Pro for unlimited tracking."
         //     );
         // }
+        return; // All users have unlimited access during beta
     }
 
     public boolean isPlanActive(User user) {

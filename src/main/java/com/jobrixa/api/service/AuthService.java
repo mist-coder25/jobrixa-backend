@@ -13,6 +13,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -36,12 +38,14 @@ public class AuthService {
                 .build();
         repository.save(user);
 
+        // Mark first 1000 users as early adopters with 6-month premium access
         long totalUsers = repository.count();
         if (totalUsers <= 1000) {
             user.setIsEarlyAdopter(true);
-            user.setEarlyAdopterExpiresAt(java.time.LocalDateTime.now().plusMonths(6));
+            user.setEarlyAdopterExpiresAt(LocalDateTime.now().plusMonths(6));
             repository.save(user);
         }
+
         try {
             emailService.sendWelcomeEmail(user.getEmail(), user.getName());
         } catch (Exception e) {
