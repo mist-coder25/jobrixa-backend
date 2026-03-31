@@ -61,6 +61,13 @@ public class User implements UserDetails {
     @Builder.Default
     private Boolean gmailConnected = false;
 
+    @Column(name = "is_early_adopter", nullable = false, columnDefinition = "boolean default false")
+    @Builder.Default
+    private Boolean isEarlyAdopter = false;
+
+    @Column(name = "early_adopter_expires_at")
+    private LocalDateTime earlyAdopterExpiresAt;
+
     @Column(name = "gmail_refresh_token", length = 500)
     private String gmailRefreshToken;
 

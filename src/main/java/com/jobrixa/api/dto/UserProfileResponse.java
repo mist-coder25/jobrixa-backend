@@ -20,5 +20,9 @@ public class UserProfileResponse {
     private String avatarUrl;
     private String plan;
     private Boolean isEarlyAdopter;
+<<<<<<< HEAD
     private LocalDateTime earlyAdopterExpiresAt;
+=======
+    private java.time.LocalDateTime earlyAdopterExpiresAt;
+>>>>>>> b4b2e73 (feat: beta launch early adopter logic and no app limits)
 }
