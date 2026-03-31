@@ -3,6 +3,7 @@ package com.jobrixa.api.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -18,6 +19,6 @@ public class UserProfileResponse {
     private Integer targetCtcMax;
     private String avatarUrl;
     private String plan;
-    private Boolean isBetaTester;
-    private Long betaDaysLeft;
+    private Boolean isEarlyAdopter;
+    private LocalDateTime earlyAdopterExpiresAt;
 }

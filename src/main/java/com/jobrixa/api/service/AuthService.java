@@ -36,6 +36,12 @@ public class AuthService {
                 .build();
         repository.save(user);
 
+        long totalUsers = repository.count();
+        if (totalUsers <= 1000) {
+            user.setIsEarlyAdopter(true);
+            user.setEarlyAdopterExpiresAt(java.time.LocalDateTime.now().plusMonths(6));
+            repository.save(user);
+        }
         try {
             emailService.sendWelcomeEmail(user.getEmail(), user.getName());
         } catch (Exception e) {

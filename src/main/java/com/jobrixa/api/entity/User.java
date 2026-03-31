@@ -71,6 +71,13 @@ public class User implements UserDetails {
     @Builder.Default
     private Integer totalApplicationsCreated = 0;
 
+    @Column(name = "is_early_adopter", nullable = false, columnDefinition = "boolean default false")
+    @Builder.Default
+    private Boolean isEarlyAdopter = false;
+
+    @Column(name = "early_adopter_expires_at")
+    private LocalDateTime earlyAdopterExpiresAt;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
