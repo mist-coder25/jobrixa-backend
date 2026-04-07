@@ -12,6 +12,7 @@ import java.util.UUID;
 public class JobApplicationResponse {
     private UUID id;
     private String companyName;
+    private String companyDomain;
     private String jobTitle;
     private String jobUrl;
     private String location;

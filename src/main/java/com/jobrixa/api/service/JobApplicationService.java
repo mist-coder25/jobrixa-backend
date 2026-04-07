@@ -54,6 +54,7 @@ public class JobApplicationService {
             .user(user)
             .company(company)
             .companyName(company.getName())
+            .companyDomain(sanitize(request.getCompanyDomain()))
             .jobTitle(sanitize(request.getJobTitle()))
             .jobUrl(sanitize(request.getJobUrl()))
             .location(sanitize(request.getLocation()))
@@ -103,6 +104,7 @@ public class JobApplicationService {
         }
             
         app.setJobTitle(sanitize(request.getJobTitle()));
+        app.setCompanyDomain(sanitize(request.getCompanyDomain()));
         app.setJobUrl(sanitize(request.getJobUrl()));
         app.setLocation(sanitize(request.getLocation()));
         app.setIsRemote(request.getIsRemote() != null ? request.getIsRemote() : false);
@@ -266,6 +268,7 @@ public class JobApplicationService {
         return JobApplicationResponse.builder()
             .id(app.getId())
             .companyName(app.getCompanyName())
+            .companyDomain(app.getCompanyDomain())
             .jobTitle(app.getJobTitle())
             .jobUrl(app.getJobUrl())
             .location(app.getLocation())

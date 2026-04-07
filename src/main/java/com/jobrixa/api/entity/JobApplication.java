@@ -32,6 +32,9 @@ public class JobApplication {
     @Column(nullable = false)
     private String companyName;
 
+    @Column(length = 255)
+    private String companyDomain;
+
     @Column(nullable = false)
     private String jobTitle;
 

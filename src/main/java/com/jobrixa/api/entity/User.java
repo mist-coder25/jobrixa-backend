@@ -74,13 +74,6 @@ public class User implements UserDetails {
     @Column(name = "gmail_last_scanned")
     private LocalDateTime gmailLastScanned;
 
-    @Column(name = "is_early_adopter", nullable = false, columnDefinition = "boolean default false")
-    @Builder.Default
-    private Boolean isEarlyAdopter = false;
-
-    @Column(name = "early_adopter_expires_at")
-    private LocalDateTime earlyAdopterExpiresAt;
-
     @Column(name = "total_applications_created", nullable = false, columnDefinition = "integer default 0")
     @Builder.Default
     private Integer totalApplicationsCreated = 0;
