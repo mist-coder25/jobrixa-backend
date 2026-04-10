@@ -37,7 +37,21 @@ public class AuthService {
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .build();
 
+        long totalUsers = repository.count();
+        if (totalUsers <= 1000) {
+            user.setIsEarlyAdopter(true);
+            user.setEarlyAdopterExpiresAt(java.time.LocalDateTime.now().plusMonths(6));
+        }
+
         repository.save(user);
+
+        // Mark first 1000 users as early adopters with 6-month premium access
+        long totalUsers = repository.count();
+        if (totalUsers <= 1000) {
+            user.setIsEarlyAdopter(true);
+            user.setEarlyAdopterExpiresAt(LocalDateTime.now().plusMonths(6));
+            repository.save(user);
+        }
 
         try {
             emailService.sendWelcomeEmail(user.getEmail(), user.getName());

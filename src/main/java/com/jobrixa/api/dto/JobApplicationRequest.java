@@ -12,7 +12,7 @@ public class JobApplicationRequest {
     
     @NotBlank
     private String companyName;
-
+    
     private String companyDomain;
     
     @NotBlank

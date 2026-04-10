@@ -104,7 +104,6 @@ public class JobApplicationService {
         }
             
         app.setJobTitle(sanitize(request.getJobTitle()));
-        app.setCompanyDomain(sanitize(request.getCompanyDomain()));
         app.setJobUrl(sanitize(request.getJobUrl()));
         app.setLocation(sanitize(request.getLocation()));
         app.setIsRemote(request.getIsRemote() != null ? request.getIsRemote() : false);
@@ -112,6 +111,7 @@ public class JobApplicationService {
         app.setSalaryMin(request.getSalaryMin());
         app.setSalaryMax(request.getSalaryMax());
         app.setTags(request.getTags() != null && !request.getTags().isEmpty() ? sanitize(String.join(",", request.getTags())) : null);
+        app.setCompanyDomain(sanitize(request.getCompanyDomain()));
         
         if (!app.getStatus().equals(request.getStatus())) {
             String oldStatus = app.getStatus();

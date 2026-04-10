@@ -32,9 +32,6 @@ public class JobApplication {
     @Column(nullable = false)
     private String companyName;
 
-    @Column(length = 255)
-    private String companyDomain;
-
     @Column(nullable = false)
     private String jobTitle;
 
@@ -97,6 +94,8 @@ public class JobApplication {
 
     @Column(columnDefinition = "TEXT")
     private String notes; // free-text notes and auto-detection log
+
+    private String companyDomain;
 
     @CreationTimestamp
     @Column(updatable = false)
