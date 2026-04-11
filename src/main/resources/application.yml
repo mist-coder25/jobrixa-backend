@@ -26,7 +26,6 @@ spring:
     enabled: false
     baseline-on-migrate: true
 
-
 razorpay:
   key-id: ${RAZORPAY_KEY_ID:}
   key-secret: ${RAZORPAY_KEY_SECRET:}
@@ -37,15 +36,14 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
+    url: jdbc:postgresql://db.lsxcotpdhxkpmkjebxnx.supabase.co:5432/postgres?sslmode=require
+    username: postgres
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 30000
       initialization-fail-timeout: 60000
-      ssl: true
-      ssl-mode: require
+      maximum-pool-size: 5
   jpa:
     open-in-view: false
     hibernate:
@@ -54,7 +52,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: false
         jdbc:
           lob:
             non_contextual_creation: true
