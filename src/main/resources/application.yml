@@ -36,9 +36,9 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:postgresql://db.lsxcotpdhxkpmkjebxnx.supabase.co:5432/postgres?sslmode=require
-    username: postgres
-    password: ${DB_PASSWORD}
+    url: ${DATABASE_URL:jdbc:postgresql://ep-falling-bread-ah6mz0o1-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require}
+    username: ${DB_USERNAME:}
+    password: ${DB_PASSWORD:}
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 30000
