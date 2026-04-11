@@ -45,13 +45,6 @@ public class AuthService {
 
         repository.save(user);
 
-        // Mark first 1000 users as early adopters with 6-month premium access
-        long totalUsers = repository.count();
-        if (totalUsers <= 1000) {
-            user.setIsEarlyAdopter(true);
-            user.setEarlyAdopterExpiresAt(LocalDateTime.now().plusMonths(6));
-            repository.save(user);
-        }
 
         try {
             emailService.sendWelcomeEmail(user.getEmail(), user.getName());
